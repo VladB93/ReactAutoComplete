@@ -1,0 +1,18 @@
+.wrapper {
+    display: flex;
+    margin: 20px;
+    flex-direction: column;
+}
+
+.wrapper > input {
+    width: 200px;
+}
+
+.wrapper > ul {
+    overflow: auto;
+    height: 500px;
+}
+
+.highlighted {
+    color: red;
+}

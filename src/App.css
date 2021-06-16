@@ -1,0 +1,8 @@
+.app {
+  display: flex;
+}
+
+.app > div {
+  width: 400px;
+  margin: 20px
+}
