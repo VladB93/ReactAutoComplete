@@ -14,7 +14,7 @@ export class AutoComplete extends Component {
     }
 
     async updateSearchTermResults(searchTerm) {
-        const response = await getData(USERS_API_ENDPOINT, 'name');
+        const response = await getData(USERS_API_ENDPOINT);
         if (!response.err && searchTerm) {
             this.setState({
                 results: response.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase())).map(user => user.name)
