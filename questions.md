@@ -66,7 +66,7 @@ A:
     return <SpinnerComponent/>;
   };`
 
-7. what's the difference in handling exceptions in promises, callbacks and
+7.what's the difference in handling exceptions in promises, callbacks and
 async...await.
 
 A: for promises we can use the reject callback to catch an error. If we use async await we would need to await for the data and then try catch if there are exceptions.
