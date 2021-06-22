@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { USERS_API_ENDPOINT } from '../consts';
 import { getData, highlightedSection } from '../helpers';
 import './styles.css'
@@ -22,30 +22,35 @@ function getHighlitedContent(name, term) {
 export function AutoCompleteHooks () {
     const [results, setResult] = useState([]);
     const [err, setError] = useState(null);
-    const input = useRef(null);
+    const [value, setValue] = useState('');
 
-    async function updateSearchTermResults(searchTerm) {
-        const response = await getData(USERS_API_ENDPOINT, 'name');
-        if (!response.err && searchTerm) {
-            const results = response.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase())).map(user => user.name);
-            setResult(results);
-            setError(null)
-        } else {
-            setResult([]);
-            setError(response.err);
+    useEffect(()=> {
+        async function updateSearchTermResults(searchTerm) {
+            const response = await getData(USERS_API_ENDPOINT, 'name');
+            if (!response.err && searchTerm) {
+                const results = response.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase())).map(user => user.name);
+                setResult(results);
+                setError(null)
+            } else {
+                setResult([]);
+                setError(response.err);
+            }
         }
-    }
+        updateSearchTermResults(value);
+    }, [value])
+
+    
 
     return (
         <div className="wrapper">
-            <input onChange={(ev) => updateSearchTermResults(ev.target.value)} ref={input}></input>
+            <input onChange={(ev) => setValue(ev.target.value)} value={value}/>
             {
                 err ?
                 <p>{err.message}</p> :
                 results.length > 0 ?
                     <ul>
                     {
-                        results.map(name => <li key={name}>{getHighlitedContent(name, input.current.value)}</li>)
+                        results.map(name => <li key={name}>{getHighlitedContent(name, value)}</li>)
                     }
                 </ul> :
                 <p>No results</p>
