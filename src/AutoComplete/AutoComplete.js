@@ -8,7 +8,8 @@ export class AutoComplete extends Component {
         super();
         this.state = {
             results: [],
-            err: null
+            err: null,
+            value: ''
         }
         this.inputRef = createRef();
     }
@@ -17,7 +18,7 @@ export class AutoComplete extends Component {
         const response = await getData(USERS_API_ENDPOINT);
         if (!response.err && searchTerm) {
             this.setState({
-                results: response.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase())).map(user => user.name)
+                results: response.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase())).map(user => user.name),
             });
         } else {
             this.setState({
@@ -25,6 +26,13 @@ export class AutoComplete extends Component {
                 err: response.err
             });
         }
+    }
+
+    updateValue(searchTerm) {
+        this.setState({
+            value: searchTerm
+        })
+        this.updateSearchTermResults(searchTerm);
     }
 
     getHighlitedContent(name, term) {
@@ -46,14 +54,14 @@ export class AutoComplete extends Component {
     render() {
         return (
             <div className="wrapper">
-                <input onChange={(ev) => this.updateSearchTermResults(ev.target.value)} ref={this.inputRef}></input>
+                <input onChange={(ev) => this.updateValue(ev.target.value)} value={this.state.value}></input>
                 {
                     this.state.err ?
                     <p>{this.state.err.message}</p> :
                     this.state.results.length > 0 ?
                      <ul>
                         {
-                            this.state.results.map(name => <li key={name}>{this.getHighlitedContent(name, this.inputRef.current.value)}</li>)
+                            this.state.results.map(name => <li key={name}>{this.getHighlitedContent(name, this.state.value)}</li>)
                         }
                     </ul> :
                     <p>No results</p>
